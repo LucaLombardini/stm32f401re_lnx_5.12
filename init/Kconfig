@@ -1622,6 +1622,202 @@ config ADVISE_SYSCALLS
 	  applications use these syscalls, you can disable this option to save
 	  space.
 
+################################################################################
+#	CUSTOMIZED SECTION						       #
+################################################################################
+
+# menuconfig <MENU_LABEL>
+#         bool "<menu_name>"
+#         <select <LABEL>>
+#         help
+#           .....
+# 
+# if <MENU_LABEL>
+# # submenus & single configs
+# 
+# menuconfig <SUBMENU_LABEL1>
+#         bool "submenu_name"
+#         default y
+#         help
+#           .....
+# 
+# if <SUBMENU_LABEL>
+# config <LABEL>
+#         bool "text"
+#         depends on <SUBMENU_LABEL>
+#         default <SUBMENU_LABEL>
+#         
+# endif # <SUBMENU_LABEL>
+# 
+# endif # <MENU_LABEL>
+
+menuconfig TINY_EXPERIMENTAL
+	bool "! ! ! ALLOW DANGEROUS CUSTOMIZATIONS ! ! !" if EXPERT
+	default n
+	help
+	  This options allows to keep/remove basic kernel functions
+          which are traded for space. Modify at your own risk.
+          It may break the kernel/system!!!
+
+if TINY_EXPERIMENTAL
+
+config PTRACE_SYSCALL
+	bool "Enable ptrace() syscall" if TINY_EXPERIMENTAL
+	default y
+	help
+	  This option enables the ptrace syscall.
+
+menuconfig TIME_REL_SYSCALLS
+	bool "Enable time related system calls"
+	default y
+	help
+	  Enable the time related syscalls.
+
+if TIME_REL_SYSCALLS
+
+config TIMES_SYSCALL
+	bool "Enable times() syscall"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the times syscall.
+
+config XETTIMEOFDAY_SYSCALLS
+	bool "Enable gettimeofday/settimeofday syscalls"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the gettimeofday and settimeofday syscalls.
+
+config XTIMENSYY_SYSCALLS
+	bool "Enable utimensat() and futimens() syscall"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the utimensat() and futimens() syscall.
+
+config XETITIMER_SYSCALLS
+	bool "Enable getitimer/setitimer syscalls"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the getitimer/setitimer syscalls.
+
+config KCLOCKTUNE_SYSCALLS
+	bool "Enable adjtimex/clock_adjtime/ntp_adjtime syscalls"
+
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the adjtimex/clock_adjtime/ntp_adjtime syscalls.
+
+config CLOCKTIME_SYSCALLS
+	bool "Enable clock_getres/clock_gettime/clock_settime syscalls"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the clock_getres/clock_gettime/clock_settime syscall.
+
+config CLOCKNANO_SYSCALL
+	bool "Enable clock_nanosleep() syscall"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the clock_nanosleep() syscall.
+
+config UTIMEX_SYSCALLS
+	bool "Enable utime/utimes syscalls"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the utime/utimes syscalls.
+
+config STIME_SYSCALL
+	bool "Enable stime() syscall"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the stime() syscall.
+
+config FUTIMESAT_SYSCALL
+	bool "Enable futimesat() syscall"
+	default TIME_REL_SYSCALLS
+	help
+	  This option enables the futimesat() syscall.
+
+endif # TIME_REL_SYSCALLS
+
+endif # TINY_EXPERIMENTAL
+
+
+# config TINY_EXPERIMENTAL
+# 	bool "! ! ! ALLOW DANGEROUS CUSTOMIZATIONS ! ! !" if EXPERT
+# 	default n
+# 	help
+# 	  This options allows to keep/remove basic kernel functions
+# 	  which are traded for space. Modify at your own risk.
+# 	  It may break the kernel/system!!!
+# 
+# config PTRACE_SYSCALL
+# 	bool "Enable ptrace() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the ptrace syscall.
+
+# config TIMES_SYSCALL
+# 	bool "Enable times() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the times syscall.
+# 
+# config XETTIMEOFDAY_SYSCALLS
+# 	bool "Enable gettimeofday/settimeofday syscalls" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the gettimeofday and settimeofday syscalls.
+# 
+# config XTIMENSYY_SYSCALLS
+# 	bool "Enable utimensat() and futimens() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the utimensat() and futimens() syscall.
+# 
+# config XETITIMER_SYSCALLS
+# 	bool "Enable getitimer/setitimer syscalls" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the getitimer/setitimer syscalls.
+# 
+# config KCLOCKTUNE_SYSCALLS
+# 	bool "Enable adjtimex/clock_adjtime/ntp_adjtime syscalls" \
+# if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the adjtimex/clock_adjtime/ntp_adjtime syscalls.
+# 
+# config CLOCKTIME_SYSCALLS
+# 	bool "Enable clock_getres/clock_gettime/clock_settime syscalls" \
+# if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the clock_getres/clock_gettime/clock_settime syscall.
+# 
+# config CLOCKNANO_SYSCALL
+# 	bool "Enable clock_nanosleep() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the clock_nanosleep() syscall.
+# 
+# config UTIMEX_SYSCALLS
+# 	bool "Enable utime/utimes syscalls" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the utime/utimes syscalls.
+# 
+# config STIME_SYSCALL
+# 	bool "Enable stime() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the stime() syscall.
+# 
+# config FUTIMESAT_SYSCALL
+# 	bool "Enable futimesat() syscall" if TINY_EXPERIMENTAL
+# 	default y
+# 	help
+# 	  This option enables the futimesat() syscall.
+################################################################################
+
 config HAVE_ARCH_USERFAULTFD_WP
 	bool
 	help
