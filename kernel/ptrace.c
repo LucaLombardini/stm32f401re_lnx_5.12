@@ -1233,6 +1233,7 @@ int ptrace_request(struct task_struct *child, long request,
 #define arch_ptrace_attach(child)	do { } while (0)
 #endif
 
+#ifdef CONFIG_PTRACE_SYSCALL
 SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
 		unsigned long, data)
 {
@@ -1277,6 +1278,9 @@ SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
  out:
 	return ret;
 }
+#else
+#pragma message( "Seems like the TAG is not defined... And that's good!" )
+#endif
 
 int generic_ptrace_peekdata(struct task_struct *tsk, unsigned long addr,
 			    unsigned long data)

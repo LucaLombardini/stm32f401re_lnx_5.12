@@ -168,6 +168,8 @@ COND_SYSCALL(delete_module);
 COND_SYSCALL(syslog);
 
 /* kernel/ptrace.c */
+// MODIFIED
+COND_SYSCALL(ptrace);
 
 /* kernel/sched/core.c */
 
