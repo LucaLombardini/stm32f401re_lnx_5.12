@@ -573,6 +573,7 @@ static int ptrace_detach(struct task_struct *child, unsigned int data)
  */
 void exit_ptrace(struct task_struct *tracer, struct list_head *dead)
 {
+#ifdef CONFIG_PTRACE_SYSCALL
 	struct task_struct *p, *n;
 
 	list_for_each_entry_safe(p, n, &tracer->ptraced, ptrace_entry) {
@@ -582,6 +583,7 @@ void exit_ptrace(struct task_struct *tracer, struct list_head *dead)
 		if (__ptrace_detach(tracer, p))
 			list_add(&p->ptrace_entry, dead);
 	}
+#endif
 }
 
 int ptrace_readdata(struct task_struct *tsk, unsigned long src, char __user *dst, int len)
