@@ -186,8 +186,13 @@ COND_SYSCALL(setfsuid);
 COND_SYSCALL(setfsgid);
 COND_SYSCALL(setgroups);
 COND_SYSCALL(getgroups);
+// MODIFIED
+COND_SYSCALL(times);
 
-/* kernel/time.c */
+/* kernel/time/time.c */
+// MODIFIED
+COND_SYSCALL(gettimeofday);
+COND_SYSCALL(settimeofday);
 
 /* kernel/timer.c */
 

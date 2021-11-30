@@ -1307,6 +1307,7 @@ int generic_ptrace_pokedata(struct task_struct *tsk, unsigned long addr,
 }
 
 #if defined CONFIG_COMPAT
+#ifdef CONFIG_PTRACE_SYSCALL
 
 int compat_ptrace_request(struct task_struct *child, compat_long_t request,
 			  compat_ulong_t addr, compat_ulong_t data)
@@ -1427,4 +1428,5 @@ COMPAT_SYSCALL_DEFINE4(ptrace, compat_long_t, request, compat_long_t, pid,
  out:
 	return ret;
 }
+#endif
 #endif	/* CONFIG_COMPAT */

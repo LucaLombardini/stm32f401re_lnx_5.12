@@ -967,6 +967,7 @@ static void do_sys_times(struct tms *tms)
 	tms->tms_cstime = nsec_to_clock_t(cstime);
 }
 
+#ifdef CONFIG_TIMES_SYSCALL
 SYSCALL_DEFINE1(times, struct tms __user *, tbuf)
 {
 	if (tbuf) {
@@ -979,8 +980,10 @@ SYSCALL_DEFINE1(times, struct tms __user *, tbuf)
 	force_successful_syscall_return();
 	return (long) jiffies_64_to_clock_t(get_jiffies_64());
 }
+#endif
 
 #ifdef CONFIG_COMPAT
+#ifdef CONFIG_TIMES_SYSCALL
 static compat_clock_t clock_t_to_compat_clock_t(clock_t x)
 {
 	return compat_jiffies_to_clock_t(clock_t_to_jiffies(x));
@@ -1004,6 +1007,7 @@ COMPAT_SYSCALL_DEFINE1(times, struct compat_tms __user *, tbuf)
 	force_successful_syscall_return();
 	return compat_jiffies_to_clock_t(jiffies);
 }
+#endif
 #endif
 
 /*
