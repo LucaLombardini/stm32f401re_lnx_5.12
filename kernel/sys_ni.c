@@ -126,6 +126,11 @@ COND_SYSCALL(timerfd_gettime);
 COND_SYSCALL(timerfd_gettime32);
 
 /* fs/utimes.c */
+// MODIFIED
+COND_SYSCALL(utime);
+COND_SYSCALL(utimes);
+COND_SYSCALL(utimensat);
+COND_SYSCALL(futimesat);
 
 /* kernel/acct.c */
 COND_SYSCALL(acct);
@@ -163,6 +168,17 @@ COND_SYSCALL(init_module);
 COND_SYSCALL(delete_module);
 
 /* kernel/posix-timers.c */
+// MODIFIED
+COND_SYSCALL(clock_adjtime);
+COND_SYSCALL(clock_adjtime32);
+COND_SYSCALL(clock_settime);
+COND_SYSCALL(clock_settime32);
+COND_SYSCALL(clock_gettime);
+COND_SYSCALL(clock_gettime32);
+COND_SYSCALL(clock_getres);
+COND_SYSCALL(clock_getres_time32);
+COND_SYSCALL(clock_nanosleep);
+COND_SYSCALL(clock_nanosleep_time32);
 
 /* kernel/printk.c */
 COND_SYSCALL(syslog);
@@ -193,6 +209,7 @@ COND_SYSCALL(times);
 // MODIFIED
 COND_SYSCALL(gettimeofday);
 COND_SYSCALL(settimeofday);
+COND_SYSCALL(stime);
 
 /* kernel/timer.c */
 

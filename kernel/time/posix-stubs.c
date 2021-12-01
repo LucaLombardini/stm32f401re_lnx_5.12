@@ -51,6 +51,12 @@ SYS_NI(clock_adjtime32);
 SYS_NI(alarm);
 #endif
 
+#ifndef CONFIG_CLOCKTIME_SYSCALLS
+SYS_NI(clock_settime);
+SYS_NI(clock_gettime);
+SYS_NI(clock_getres);
+#endif
+
 /*
  * We preserve minimal support for CLOCK_REALTIME and CLOCK_MONOTONIC
  * as it is easy to remain compatible with little code. CLOCK_BOOTTIME

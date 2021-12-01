@@ -1694,20 +1694,8 @@ config XETTIMEOFDAY_SYSCALLS
 	help
 	  This option enables the gettimeofday and settimeofday syscalls.
 
-config XTIMENSYY_SYSCALLS
-	bool "Enable utimensat() and futimens() syscall"
-	default TIMEGROUP_SYSCALLS
-	help
-	  This option enables the utimensat() and futimens() syscall.
-
-config XETITIMER_SYSCALLS
-	bool "Enable getitimer/setitimer syscalls"
-	default TIMEGROUP_SYSCALLS
-	help
-	  This option enables the getitimer/setitimer syscalls.
-
 config KCLOCKTUNE_SYSCALLS
-	bool "Enable adjtimex/clock_adjtime/ntp_adjtime syscalls"
+	bool "Enable adjtimex/clock_adjtime syscalls"
 
 	default TIMEGROUP_SYSCALLS
 	help
@@ -1729,7 +1717,13 @@ config UTIMEX_SYSCALLS
 	bool "Enable utime/utimes syscalls"
 	default TIMEGROUP_SYSCALLS
 	help
-	  This option enables the utime/utimes syscalls.
+	  This option enables the utime/utimes (and 32-bit vers.) syscalls.
+
+config UTIMENSAT_SYSCALLS
+	bool "Enable utimensat() sysycalls"
+	default TIMEGROUP_SYSCALLS
+	help
+	  This option enables the utimensat/utimensat_time32 syscalls.
 
 config STIME_SYSCALL
 	bool "Enable stime() syscall"
@@ -1741,15 +1735,15 @@ config FUTIMESAT_SYSCALL
 	bool "Enable futimesat() syscall"
 	default TIMEGROUP_SYSCALLS
 	help
-	  This option enables the futimesat() syscall.
+	  This option enables the futimesat/futimesat_time32 syscall.
 
 endif # TIMEGROUP_SYSCALLS
 
-config VM86_SYSCALLS
-	bool "Enable vm86() and vm86old() syscalls"
-	default y
-	help
-	  This option enables the virtual 8086 mode related syscalls.
+#config VM86_SYSCALLS
+#	bool "Enable vm86() and vm86old() syscalls"
+#	default y
+#	help
+#	  This option enables the virtual 8086 mode related syscalls.
 
 menuconfig OLD_SYSCALLS
 	bool "Enable old or outdated system calls"

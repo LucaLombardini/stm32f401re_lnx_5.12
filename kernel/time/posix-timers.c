@@ -1064,6 +1064,7 @@ void exit_itimers(struct signal_struct *sig)
 	}
 }
 
+#ifdef CONFIG_CLOCKTIME_SYSCALLS
 SYSCALL_DEFINE2(clock_settime, const clockid_t, which_clock,
 		const struct __kernel_timespec __user *, tp)
 {
@@ -1096,6 +1097,7 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
 
 	return error;
 }
+#endif
 
 int do_clock_adjtime(const clockid_t which_clock, struct __kernel_timex * ktx)
 {
@@ -1109,6 +1111,7 @@ int do_clock_adjtime(const clockid_t which_clock, struct __kernel_timex * ktx)
 	return kc->clock_adj(which_clock, ktx);
 }
 
+#ifdef CONFIG_KCLOCKTUNE_SYSCALLS
 SYSCALL_DEFINE2(clock_adjtime, const clockid_t, which_clock,
 		struct __kernel_timex __user *, utx)
 {
@@ -1125,7 +1128,9 @@ SYSCALL_DEFINE2(clock_adjtime, const clockid_t, which_clock,
 
 	return err;
 }
+#endif
 
+#ifdef CONFIG_CLOCKTIME_SYSCALLS
 SYSCALL_DEFINE2(clock_getres, const clockid_t, which_clock,
 		struct __kernel_timespec __user *, tp)
 {
@@ -1143,8 +1148,9 @@ SYSCALL_DEFINE2(clock_getres, const clockid_t, which_clock,
 
 	return error;
 }
+#endif
 
-#ifdef CONFIG_COMPAT_32BIT_TIME
+#if defined(CONFIG_COMPAT_32BIT_TIME) && defined(CONFIG_CLOCKTIME_SYSCALLS)
 
 SYSCALL_DEFINE2(clock_settime32, clockid_t, which_clock,
 		struct old_timespec32 __user *, tp)
@@ -1179,6 +1185,7 @@ SYSCALL_DEFINE2(clock_gettime32, clockid_t, which_clock,
 	return err;
 }
 
+#ifdef CONFIG_KCLOCKTUNE_SYSCALLS
 SYSCALL_DEFINE2(clock_adjtime32, clockid_t, which_clock,
 		struct old_timex32 __user *, utp)
 {
@@ -1196,6 +1203,7 @@ SYSCALL_DEFINE2(clock_adjtime32, clockid_t, which_clock,
 
 	return err;
 }
+#endif
 
 SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
 		struct old_timespec32 __user *, tp)
@@ -1214,7 +1222,8 @@ SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
 	return err;
 }
 
-#endif
+#endif /*if defined(CONFIG_COMPAT_32BIT_TIME) && 
+	 defined(CONFIG_CLOCKTIME_SYSCALLS)*/
 
 /*
  * nanosleep for monotonic and realtime clocks
@@ -1242,6 +1251,7 @@ static int common_nsleep_timens(const clockid_t which_clock, int flags,
 				 which_clock);
 }
 
+#ifdef CONFIG_CLOCKNANO_SYSCALL
 SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
 		const struct __kernel_timespec __user *, rqtp,
 		struct __kernel_timespec __user *, rmtp)
@@ -1295,6 +1305,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
 }
 
 #endif
+#endif /*end if CONFIG_CLOCKNANO_SYSCALL*/
 
 static const struct k_clock clock_realtime = {
 	.clock_getres		= posix_get_hrtimer_res,

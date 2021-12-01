@@ -77,7 +77,7 @@ SYSCALL_DEFINE1(time, __kernel_old_time_t __user *, tloc)
  * why not move it into the appropriate arch directory (for those
  * architectures that need it).
  */
-
+#ifdef CONFIG_STIME_SYSCALL
 SYSCALL_DEFINE1(stime, __kernel_old_time_t __user *, tptr)
 {
 	struct timespec64 tv;
@@ -95,7 +95,7 @@ SYSCALL_DEFINE1(stime, __kernel_old_time_t __user *, tptr)
 	do_settimeofday64(&tv);
 	return 0;
 }
-
+#endif
 #endif /* __ARCH_WANT_SYS_TIME */
 
 #ifdef CONFIG_COMPAT_32BIT_TIME
@@ -116,6 +116,7 @@ SYSCALL_DEFINE1(time32, old_time32_t __user *, tloc)
 	return i;
 }
 
+#ifdef CONFIG_STIME_SYSCALL
 SYSCALL_DEFINE1(stime32, old_time32_t __user *, tptr)
 {
 	struct timespec64 tv;
@@ -133,6 +134,7 @@ SYSCALL_DEFINE1(stime32, old_time32_t __user *, tptr)
 	do_settimeofday64(&tv);
 	return 0;
 }
+#endif
 
 #endif /* __ARCH_WANT_SYS_TIME32 */
 #endif
@@ -269,7 +271,7 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
 #endif
 #endif /*end if CONFIG_XETTIMEOFDAY_SYSCALL*/
 
-#ifdef CONFIG_64BIT
+#if defined(CONFIG_64BIT) && defined(CONFIG_KCLOCKTUNE_SYSCALLS)
 SYSCALL_DEFINE1(adjtimex, struct __kernel_timex __user *, txc_p)
 {
 	struct __kernel_timex txc;		/* Local copy of parameter */
@@ -350,6 +352,7 @@ int put_old_timex32(struct old_timex32 __user *utp, const struct __kernel_timex 
 	return 0;
 }
 
+#ifdef CONFIG_KCLOCKTUNE_SYSCALLS
 SYSCALL_DEFINE1(adjtimex_time32, struct old_timex32 __user *, utp)
 {
 	struct __kernel_timex txc;
@@ -367,6 +370,7 @@ SYSCALL_DEFINE1(adjtimex_time32, struct old_timex32 __user *, utp)
 
 	return ret;
 }
+#endif
 #endif
 
 /*
