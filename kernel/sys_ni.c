@@ -94,6 +94,7 @@ COND_SYSCALL(flock);
 /* fs/nfsctl.c */
 
 /* fs/open.c */
+COND_SYSCALL(fallocate);
 
 /* fs/pipe.c */
 
@@ -107,6 +108,13 @@ COND_SYSCALL(quotactl);
 /* fs/sendfile.c */
 
 /* fs/select.c */
+// MODIFIED
+COND_SYSCALL(old_select);
+COND_SYSCALL_COMPAT(old_select);
+COND_SYSCALL(select);
+COND_SYSCALL_COMPAT(select);
+COND_SYSCALL(pselect6);
+COND_SYSCALL_COMPAT(pselect6_time64);
 
 /* fs/signalfd.c */
 COND_SYSCALL(signalfd4);

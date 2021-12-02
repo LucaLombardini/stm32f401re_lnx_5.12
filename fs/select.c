@@ -719,11 +719,13 @@ static int kern_select(int n, fd_set __user *inp, fd_set __user *outp,
 	return poll_select_finish(&end_time, tvp, PT_TIMEVAL, ret);
 }
 
+#ifdef CONFIG_XSELECT_SYSCALLS
 SYSCALL_DEFINE5(select, int, n, fd_set __user *, inp, fd_set __user *, outp,
 		fd_set __user *, exp, struct __kernel_old_timeval __user *, tvp)
 {
 	return kern_select(n, inp, outp, exp, tvp);
 }
+#endif
 
 static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
 		       fd_set __user *exp, void __user *tsp,
@@ -788,6 +790,7 @@ Efault:
 	return -EFAULT;
 }
 
+#ifdef CONFIG_XSELECT_SYSCALLS
 SYSCALL_DEFINE6(pselect6, int, n, fd_set __user *, inp, fd_set __user *, outp,
 		fd_set __user *, exp, struct __kernel_timespec __user *, tsp,
 		void __user *, sig)
@@ -799,9 +802,10 @@ SYSCALL_DEFINE6(pselect6, int, n, fd_set __user *, inp, fd_set __user *, outp,
 
 	return do_pselect(n, inp, outp, exp, tsp, x.p, x.size, PT_TIMESPEC);
 }
+#endif
 
 #if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
-
+#ifdef CONFIG_XSELECT_SYSCALLS
 SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *, outp,
 		fd_set __user *, exp, struct old_timespec32 __user *, tsp,
 		void __user *, sig)
@@ -813,10 +817,10 @@ SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *, 
 
 	return do_pselect(n, inp, outp, exp, tsp, x.p, x.size, PT_OLD_TIMESPEC);
 }
-
+#endif
 #endif
 
-#ifdef __ARCH_WANT_SYS_OLD_SELECT
+#if defined(__ARCH_WANT_SYS_OLD_SELECT) && defined(CONFIG_XSELECT_SYSCALLS)
 struct sel_arg_struct {
 	unsigned long n;
 	fd_set __user *inp, *outp, *exp;
@@ -1281,12 +1285,14 @@ static int do_compat_select(int n, compat_ulong_t __user *inp,
 	return poll_select_finish(&end_time, tvp, PT_OLD_TIMEVAL, ret);
 }
 
+#ifdef CONFIG_XSELECT_SYSCALLS
 COMPAT_SYSCALL_DEFINE5(select, int, n, compat_ulong_t __user *, inp,
 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,
 	struct old_timeval32 __user *, tvp)
 {
 	return do_compat_select(n, inp, outp, exp, tvp);
 }
+#endif
 
 struct compat_sel_arg_struct {
 	compat_ulong_t n;
@@ -1296,6 +1302,7 @@ struct compat_sel_arg_struct {
 	compat_uptr_t tvp;
 };
 
+#ifdef CONFIG_XSELECT_SYSCALLS
 COMPAT_SYSCALL_DEFINE1(old_select, struct compat_sel_arg_struct __user *, arg)
 {
 	struct compat_sel_arg_struct a;
@@ -1305,6 +1312,7 @@ COMPAT_SYSCALL_DEFINE1(old_select, struct compat_sel_arg_struct __user *, arg)
 	return do_compat_select(a.n, compat_ptr(a.inp), compat_ptr(a.outp),
 				compat_ptr(a.exp), compat_ptr(a.tvp));
 }
+#endif
 
 static long do_compat_pselect(int n, compat_ulong_t __user *inp,
 	compat_ulong_t __user *outp, compat_ulong_t __user *exp,
@@ -1361,6 +1369,7 @@ Efault:
 	return -EFAULT;
 }
 
+#ifdef CONFIG_XSELECT_SYSCALLS
 COMPAT_SYSCALL_DEFINE6(pselect6_time64, int, n, compat_ulong_t __user *, inp,
 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,
 	struct __kernel_timespec __user *, tsp, void __user *, sig)
@@ -1373,8 +1382,9 @@ COMPAT_SYSCALL_DEFINE6(pselect6_time64, int, n, compat_ulong_t __user *, inp,
 	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(x.p),
 				 x.size, PT_TIMESPEC);
 }
+#endif
 
-#if defined(CONFIG_COMPAT_32BIT_TIME)
+#if defined(CONFIG_COMPAT_32BIT_TIME) && defined(CONFIG_XSELECT_SYSCALLS)
 
 COMPAT_SYSCALL_DEFINE6(pselect6_time32, int, n, compat_ulong_t __user *, inp,
 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,

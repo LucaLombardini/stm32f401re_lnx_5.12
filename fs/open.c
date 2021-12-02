@@ -337,10 +337,12 @@ int ksys_fallocate(int fd, int mode, loff_t offset, loff_t len)
 	return error;
 }
 
+#ifdef FALLOCATE_SYSCALL
 SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
 {
 	return ksys_fallocate(fd, mode, offset, len);
 }
+#endif
 
 /*
  * access() needs to use the real uid/gid, not the effective uid/gid.
