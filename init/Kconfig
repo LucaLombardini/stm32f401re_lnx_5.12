@@ -1760,6 +1760,11 @@ config XSELECT_SYSCALLS
 	  Enable select/pselect syscalls. Note that nowadays are outperformed by
 	  poll/ppoll in terms of file descriptor capabilities.
 
+config OLDMMAP_SYSCALL
+	bool "Enable old_mmap() syscall"
+	default OLD_SYSCALLS
+	help
+	  No need to replicate functionalities of more modern syscalls.
 # TO BE CONTINUED...
 
 endif # OLD_SYSCALLS

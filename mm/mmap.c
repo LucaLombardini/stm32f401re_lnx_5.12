@@ -1643,7 +1643,7 @@ SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, pgoff);
 }
 
-#ifdef __ARCH_WANT_SYS_OLD_MMAP
+#if defined(__ARCH_WANT_SYS_OLD_MMAP) && defined(CONFIG_OLDMMAP_SYSCALL)
 struct mmap_arg_struct {
 	unsigned long addr;
 	unsigned long len;
@@ -1665,7 +1665,7 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
 	return ksys_mmap_pgoff(a.addr, a.len, a.prot, a.flags, a.fd,
 			       a.offset >> PAGE_SHIFT);
 }
-#endif /* __ARCH_WANT_SYS_OLD_MMAP */
+#endif /* __ARCH_WANT_SYS_OLD_MMAP && CONFIG_OLDMMAP_SYSCALL */
 
 /*
  * Some shared mappings will want the pages marked read-only

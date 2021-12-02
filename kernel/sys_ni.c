@@ -291,6 +291,8 @@ COND_SYSCALL_COMPAT(recvmsg);
 
 /* mm/nommu.c, also with MMU */
 COND_SYSCALL(mremap);
+// MODIFIED
+COND_SYSCALL(old_mmap);
 
 /* security/keys/keyctl.c */
 COND_SYSCALL(add_key);

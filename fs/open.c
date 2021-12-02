@@ -337,7 +337,7 @@ int ksys_fallocate(int fd, int mode, loff_t offset, loff_t len)
 	return error;
 }
 
-#ifdef FALLOCATE_SYSCALL
+#ifdef CONFIG_FALLOCATE_SYSCALL
 SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
 {
 	return ksys_fallocate(fd, mode, offset, len);
