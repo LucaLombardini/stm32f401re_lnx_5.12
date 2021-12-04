@@ -27,6 +27,22 @@
 #include "ntp_internal.h"
 #include "timekeeping_internal.h"
 
+/*##############################################################################
+ *#	CUSTOM IN-PLACE FUNCTION BODIES FOR THE REMOVED ONES IN ntp.o          #
+ */
+#ifndef CONFIG_NTP_OBJ
+extern void ntp_clear(void) {}
+extern inline void tk_update_leap_state(struct timekeeper *tk) {}
+extern int second_overflow(time64_t secs) {return 0;}
+ktime_t ntp_get_next_leap(void) {return KTIME_MAX;}
+extern u64 ntp_tick_length(void) {return NTP_INTERVAL_LENGTH;}
+int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
+                  s32 *time_tai, struct audit_ntp_data *ad) {return TIME_OK;}
+extern void __init ntp_init(void) {}
+#endif
+/*##############################################################################
+ */
+
 #define TK_CLEAR_NTP		(1 << 0)
 #define TK_MIRROR		(1 << 1)
 #define TK_CLOCK_WAS_SET	(1 << 2)

@@ -1769,6 +1769,23 @@ config OLDMMAP_SYSCALL
 
 endif # OLD_SYSCALLS
 
+menuconfig COMPILE_INFRASTRUCTURE
+        bool "Enable object file inclusion"
+        default y
+        help
+          Remove the unused but still linked object files from the kernel
+          to reduce memory footprint.
+
+if COMPILE_INFRASTRUCTURE
+
+config NTP_OBJ
+        bool "Keep ntp.o file in linkage list"
+        default y
+        help
+          Keep linking the ntp.o file
+
+endif # COMPILE_INFRASTRUCTURE
+
 endif # TINY_EXPERIMENTAL
 
 ################################################################################
