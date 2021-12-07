@@ -1786,6 +1786,21 @@ config NTP_OBJ
 
 endif # COMPILE_INFRASTRUCTURE
 
+menuconfig INLINE_INFRASTRUCTURE
+        bool "Enable function inlining"
+        default y
+        help
+          Avoid the inlining of function code to reduce the overall code
+          size.   
+if INLINE_INFRASTRUCTURE
+
+config TIMEKEEP_INLINE
+        bool "Keep inlining the functions inside kernel/time/timekeep.c"
+        default y
+        help
+
+endif # INLINE_INFRASTRUCTURE
+
 endif # TINY_EXPERIMENTAL
 
 ################################################################################

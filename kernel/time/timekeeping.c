@@ -32,7 +32,7 @@
  */
 #ifndef CONFIG_NTP_OBJ
 extern void ntp_clear(void) {}
-extern inline void tk_update_leap_state(struct timekeeper *tk) {}
+//extern inline void tk_update_leap_state(struct timekeeper *tk) {}
 extern int second_overflow(time64_t secs) {return 0;}
 ktime_t ntp_get_next_leap(void) {return KTIME_MAX;}
 extern u64 ntp_tick_length(void) {return NTP_INTERVAL_LENGTH;}
@@ -128,7 +128,11 @@ static struct tk_fast tk_fast_raw  ____cacheline_aligned = {
 	.base[1] = FAST_TK_INIT,
 };
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline void tk_normalize_xtime(struct timekeeper *tk)
+#else
+static noinline void tk_normalize_xtime(struct timekeeper *tk)
+#endif
 {
 	while (tk->tkr_mono.xtime_nsec >= ((u64)NSEC_PER_SEC << tk->tkr_mono.shift)) {
 		tk->tkr_mono.xtime_nsec -= (u64)NSEC_PER_SEC << tk->tkr_mono.shift;
@@ -140,7 +144,11 @@ static inline void tk_normalize_xtime(struct timekeeper *tk)
 	}
 }
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline struct timespec64 tk_xtime(const struct timekeeper *tk)
+#else
+static noinline struct timespec64 tk_xtime(const struct timekeeper *tk)
+#endif
 {
 	struct timespec64 ts;
 
@@ -179,7 +187,11 @@ static void tk_set_wall_to_mono(struct timekeeper *tk, struct timespec64 wtm)
 	tk->offs_tai = ktime_add(tk->offs_real, ktime_set(tk->tai_offset, 0));
 }
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline void tk_update_sleep_time(struct timekeeper *tk, ktime_t delta)
+#else
+static noinline void tk_update_sleep_time(struct timekeeper *tk, ktime_t delta)
+#endif
 {
 	tk->offs_boot = ktime_add(tk->offs_boot, delta);
 	/*
@@ -202,7 +214,11 @@ static inline void tk_update_sleep_time(struct timekeeper *tk, ktime_t delta)
  * a read of the fast-timekeeper tkrs (which is protected by its own locking
  * and update logic).
  */
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 tk_clock_read(const struct tk_read_base *tkr)
+#else
+static noinline u64 tk_clock_read(const struct tk_read_base *tkr)
+#endif
 {
 	struct clocksource *clock = READ_ONCE(tkr->clock);
 
@@ -251,7 +267,11 @@ static void timekeeping_check_update(struct timekeeper *tk, u64 offset)
 	}
 }
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
+#else
+static noinline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
+#endif
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
 	u64 now, last, mask, max, delta;
@@ -295,7 +315,11 @@ static inline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
 static inline void timekeeping_check_update(struct timekeeper *tk, u64 offset)
 {
 }
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
+#else
+static noinline u64 timekeeping_get_delta(const struct tk_read_base *tkr)
+#endif
 {
 	u64 cycle_now, delta;
 
@@ -384,8 +408,11 @@ static void tk_setup_internals(struct timekeeper *tk, struct clocksource *clock)
 }
 
 /* Timekeeper helper functions. */
-
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 timekeeping_delta_to_ns(const struct tk_read_base *tkr, u64 delta)
+#else
+static noinline u64 timekeeping_delta_to_ns(const struct tk_read_base *tkr, u64 delta)
+#endif
 {
 	u64 nsec;
 
@@ -395,7 +422,11 @@ static inline u64 timekeeping_delta_to_ns(const struct tk_read_base *tkr, u64 de
 	return nsec;
 }
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 timekeeping_get_ns(const struct tk_read_base *tkr)
+#else
+static noinline u64 timekeeping_get_ns(const struct tk_read_base *tkr)
+#endif
 {
 	u64 delta;
 
@@ -403,7 +434,11 @@ static inline u64 timekeeping_get_ns(const struct tk_read_base *tkr)
 	return timekeeping_delta_to_ns(tkr, delta);
 }
 
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline u64 timekeeping_cycles_to_ns(const struct tk_read_base *tkr, u64 cycles)
+#else
+static noinline u64 timekeeping_cycles_to_ns(const struct tk_read_base *tkr, u64 cycles)
+#endif
 {
 	u64 delta;
 
@@ -709,7 +744,11 @@ EXPORT_SYMBOL_GPL(pvclock_gtod_unregister_notifier);
 /*
  * tk_update_leap_state - helper to update the next_leap_ktime
  */
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline void tk_update_leap_state(struct timekeeper *tk)
+#else
+static noinline void tk_update_leap_state(struct timekeeper *tk)
+#endif
 {
 	tk->next_leap_ktime = ntp_get_next_leap();
 	if (tk->next_leap_ktime != KTIME_MAX)
@@ -720,7 +759,11 @@ static inline void tk_update_leap_state(struct timekeeper *tk)
 /*
  * Update the ktime_t based scalar nsec members of the timekeeper
  */
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline void tk_update_ktime_data(struct timekeeper *tk)
+#else
+static noinline void tk_update_ktime_data(struct timekeeper *tk)
+#endif
 {
 	u64 seconds;
 	u32 nsec;
@@ -2043,7 +2086,11 @@ static void timekeeping_adjust(struct timekeeper *tk, s64 offset)
  * from the xtime_nsec field to the xtime_secs field.
  * It also calls into the NTP code to handle leapsecond processing.
  */
+#ifdef CONFIG_TIMEKEEP_INLINE
 static inline unsigned int accumulate_nsecs_to_secs(struct timekeeper *tk)
+#else
+static noinline unsigned int accumulate_nsecs_to_secs(struct timekeeper *tk)
+#endif
 {
 	u64 nsecps = (u64)NSEC_PER_SEC << tk->tkr_mono.shift;
 	unsigned int clock_set = 0;
