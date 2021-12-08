@@ -1,0 +1,2 @@
+alias compileK="./new_compile.sh"
+alias configK="make ARCH=arm O=build/stm32f401re menuconfig"
